@@ -36,7 +36,7 @@ function initialiseBuffer() {
     var vertexData = [
         -0.4, -0.4, 0.0, // Bottom left
          0.4, -0.4, 0.0, // Bottom right
-         0.0, 0.7, 0.0  // Top middle
+         0.0, 0.5, 0.0  // Top middle
     ];
 
     // Generate a buffer object
@@ -49,11 +49,12 @@ function initialiseBuffer() {
 
 function initialiseShaders() {
 
-    var fragmentShaderSource = '\
-			void main(void) \
-			{ \
-				gl_FragColor = vec4(1.0, 1.0, 0.66, 1.0); \
-			}';
+    var fragmentShaderSource = `
+			void main(void) 
+			{ 
+				gl_FragColor = vec4(1.0, 1.0, 0.66, 1.0); 
+			}
+			`;
     gl.fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(gl.fragShader, fragmentShaderSource);
     gl.compileShader(gl.fragShader);
@@ -66,13 +67,15 @@ function initialiseShaders() {
     }
 
     // Vertex shader code
-    var vertexShaderSource = '\
-			attribute highp vec4 myVertex; \
-			uniform mediump mat4 transformationMatrix; \
-			void main(void)  \
-			{ \
-				gl_Position = transformationMatrix * myVertex; \
-			}';
+    var vertexShaderSource = `
+			attribute highp vec4 myVertex; 
+			uniform mediump mat4 transformationMatrix; 
+			void main(void)  
+			{ 
+				gl_Position = transformationMatrix * myVertex; 
+			}
+			
+			`;
     gl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(gl.vertexShader, vertexShaderSource);
     gl.compileShader(gl.vertexShader);

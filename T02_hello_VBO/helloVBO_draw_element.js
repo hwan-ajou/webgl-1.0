@@ -36,24 +36,34 @@ function initialiseBuffer() {
     var vertexData = [
         -0.4, -0.4, 0.0, // Bottom left
          0.4, -0.4, 0.0, // Bottom right
-         0.0, 0.7, 0.0  // Top middle
+         0.0, 0.5, 0.0,  // Top middle
+		 0.6, 0.4, 0.0, // Bottom left
+         0.8, 0.4, 0.0, // Bottom right
+         0.7, 0.9, 0.0  // Top middle
+    ];
+	var elementData = [
+        0, 1, 2, 3, 4, 5
     ];
 
     // Generate a buffer object
-    gl.vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
+    var arrayBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
-    return testGLError("initialiseBuffers");
-	
+    // return testGLError("initialiseBuffers");
+	var elementBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER , elementBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(elementData), gl.STATIC_DRAW);
+	return testGLError("initialiseBuffers");
 }
 
 function initialiseShaders() {
 
-    var fragmentShaderSource = '\
-			void main(void) \
-			{ \
-				gl_FragColor = vec4(1.0, 1.0, 0.66, 1.0); \
-			}';
+    var fragmentShaderSource = `
+			void main(void) 
+			{ 
+				gl_FragColor = vec4(1.0, 1.0, 0.66, 1.0); 
+			}
+			`;
     gl.fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(gl.fragShader, fragmentShaderSource);
     gl.compileShader(gl.fragShader);
@@ -66,13 +76,15 @@ function initialiseShaders() {
     }
 
     // Vertex shader code
-    var vertexShaderSource = '\
-			attribute highp vec4 myVertex; \
-			uniform mediump mat4 transformationMatrix; \
-			void main(void)  \
-			{ \
-				gl_Position = transformationMatrix * myVertex; \
-			}';
+    var vertexShaderSource = `
+			attribute highp vec4 myVertex; 
+			uniform mediump mat4 transformationMatrix; 
+			void main(void)  
+			{ 
+				gl_Position = transformationMatrix * myVertex; 
+			}
+			
+			`;
     gl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(gl.vertexShader, vertexShaderSource);
     gl.compileShader(gl.vertexShader);
@@ -135,13 +147,13 @@ function renderScene() {
     gl.enableVertexAttribArray(0);
 
     // Set the vertex data to this attribute index, with the number of floats in each position
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 0, 0);
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 0, 0); 
 
     if (!testGLError("gl.vertexAttribPointer")) {
         return false;
     }
 
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     if (!testGLError("gl.drawArrays")) {
         return false;
