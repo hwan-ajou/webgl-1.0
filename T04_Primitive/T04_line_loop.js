@@ -29,33 +29,36 @@ function initialiseGL(canvas) {
     return true;
 }
 
-var shaderProgram;
+var arrayBuffer;
 
 function initialiseBuffer() {
 
     var vertexData = [
-        -0.4, -0.4, 0.0, 1.0, 0.0, 0.0, 1.0, // Bottom left
-         0.4, -0.4, 0.0, 1.0, 0.0, 0.0, 1.0, // Bottom right
-         0.0, 0.4, 0.0, 1.0, 0.0, 0.0, 1.0, // Top middle
-		 0.5, 0.4, 0.0, 1.0, 1.0, 0.0, 1.0, // Bottom left
-         0.9, 0.4, 0.0, 1.0, 1.0, 0.0, 1.0,// Bottom right
-         0.7, 0.8, 0.0, 1.0, 0.0, 0.0, 1.0  // Top middle
+        -0.4, -0.4, 0.0, 1.0, 0.0, 0.0, 1.0,  // Bottom left
+         0.4, -0.4, 0.0, 1.0, 0.0, 1.0, 1.0,  // Bottom right
+         0.0, 0.5, 0.0, 1.0, 1.0, 1.0, 1.0,  // Top middle
+	
+		 0.6, 0.4, 0.0, 1.0, 0.0, 0.0, 1.0,  // Bottom left      
+         0.7, 0.9, 0.0, 1.0, 0.0, 1.0, 1.0,  // Top middle
+		  0.8, 0.4, 0.0, 1.0, 1.0, 0.0, 1.0  // Bottom right
     ];
 
     // Generate a buffer object
-    gl.vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
+    arrayBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
-    return testGLError("initialiseBuffers");
+	
+	return testGLError("initialiseBuffers");
 }
+
+var shaderProgram;
 
 function initialiseShaders() {
 
     var fragmentShaderSource = `
-			varying highp vec4 col;
-			void main(void)
+			varying highp vec4 col;			
+			void main(void) 
 			{ 
-				// gl_FragColor = vec4(1.0, 1.0, 0.66, 1.0);
 				gl_FragColor = col; 
 			}
 			`;
@@ -72,13 +75,12 @@ function initialiseShaders() {
 
     // Vertex shader code
     var vertexShaderSource = `
-	
-			attribute highp vec4 myVertex;
-			attribute highp vec4 myColor;
+			attribute highp vec4 myVertex; 
+			attribute highp vec4 myColor; 
 			varying highp vec4 col;
-			uniform mediump mat4 transformationMatrix;
-			void main(void) 
-			{
+			uniform mediump mat4 transformationMatrix; 
+			void main(void)  
+			{ 
 				gl_Position = transformationMatrix * myVertex;
 				col = myColor; 
 			}
@@ -120,6 +122,8 @@ function initialiseShaders() {
     return testGLError("initialiseShaders");
 }
 
+var frame = 1;  
+
 function renderScene() {
  
     gl.clearColor(0.6, 0.8, 1.0, 1.0);
@@ -148,14 +152,16 @@ function renderScene() {
 	gl.enableVertexAttribArray(1);
 
     // Set the vertex data to this attribute index, with the number of floats in each position
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 28, 0);
-	gl.vertexAttribPointer(1, 4, gl.FLOAT, gl.FALSE, 28, 12);
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 28, 0); 
+	gl.vertexAttribPointer(1, 4, gl.FLOAT, gl.FALSE, 28, 12); 
 
     if (!testGLError("gl.vertexAttribPointer")) {
         return false;
     }
-
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+	
+	gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer);
+	gl.lineWidth(0.2);
+    gl.drawArrays(gl.LINE_LOOP, 0, 6);
 
     if (!testGLError("gl.drawArrays")) {
         return false;
@@ -164,10 +170,12 @@ function renderScene() {
     return true;
 }
 
-function main() {
-    var canvas = document.getElementById("helloapicanvas");
 
-    if (!initialiseGL(canvas)) {
+
+function main() {
+    var canid = document.getElementById("helloapicanvas");
+
+    if (!initialiseGL(canid)) {
         return;
     }
 
