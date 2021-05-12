@@ -215,6 +215,20 @@ function renderScene() {
     }
 
 	gl.drawArrays(draw_mode, 0, 36); 
+	var saveMat = mat4.create();
+	mat4.copy(saveMat,transformationMatrix);  
+	for (var i = 0 ; i < 8 ; i++)
+	{
+		
+		mat4.rotateY (transformationMatrix, transformationMatrix, i*6.28/8.0 + yRot * 3.0); 
+		mat4.translate(transformationMatrix, transformationMatrix, [1.0, 0.0, 0.0]); 
+		mat4.scale(transformationMatrix, transformationMatrix, [0.2, 0.2, 0.2]); 
+		mat4.rotateY (transformationMatrix, transformationMatrix, yRot * 7.0); 
+		gl.uniformMatrix4fv(matrixLocation, gl.FALSE, transformationMatrix );
+		gl.drawArrays(draw_mode, 0, 36); 
+		mat4.copy(transformationMatrix, saveMat);  
+	}
+	
     if (!testGLError("gl.drawArrays")) {
         return false;
     }

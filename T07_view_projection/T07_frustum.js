@@ -1,7 +1,6 @@
 var gl;
 
-const {mat2, mat3, mat4, vec2, vec3, vec4} = glMatrix;  
-// Now we can use function without glMatrix.~~~
+const {mat2, mat3, mat4, vec2, vec3, vec4} = glMatrix;  // Now we can use function without glMatrix.~~~
 
 function testGLError(functionLastCalled) {
     /* gl.getError returns the last error that occurred using WebGL for debugging */ 
@@ -108,11 +107,13 @@ function initialiseShaders() {
     var vertexShaderSource = `
 			attribute highp vec4 myVertex; 
 			attribute highp vec4 myColor; 
-			uniform mediump mat4 transformationMatrix; 
+			uniform mediump mat4 mMatrix; 
+			uniform mediump mat4 vMatrix; 
+			uniform mediump mat4 pMatrix; 
 			varying  highp vec4 col;
 			void main(void)  
 			{ 
-				gl_Position = transformationMatrix * myVertex; 
+				gl_Position = pMatrix * vMatrix * mMatrix * myVertex; 
 				gl_PointSize = 8.0;
 				col = myColor; 
 			}`;
@@ -159,14 +160,9 @@ function toggleAnimation()
 	console.log("flag_animation=", flag_animation);
 }
 
-function speed_plus()
+function speed_scale(a)
 {
-	speedRot = speedRot * 1.1; 
-}
-
-function speed_minus()
-{
-	speedRot = speedRot / 1.1; 
+	speedRot *= a; 
 }
 
 var draw_mode = 4; // 4 Triangles, 3 line_strip 0-Points
@@ -176,29 +172,42 @@ function fn_draw_mode(a)
 	draw_mode = a;
 }
 
+var mMatrix; 
+var vMatrix; 
+var pMatrix; 
+
+var cam_y = 0.0; 
 
 function renderScene() {
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	gl.clearDepth(1.0);										// Added for depth Test 
-	// gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);		// Added for depth Test 
+	gl.clearDepth(1);										// Added for depth Test 
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);	// Added for depth Test 
 	gl.enable(gl.DEPTH_TEST);								// Added for depth Test 
 
-    var matrixLocation = gl.getUniformLocation(gl.programObject, "transformationMatrix");
-    var transformationMatrix = mat4.create(); 
-	mat4.scale(transformationMatrix, transformationMatrix, [0.3, 0.3, 0.3]); 
-	mat4.rotateX(transformationMatrix, transformationMatrix, xRot);
-	mat4.rotateY(transformationMatrix, transformationMatrix, yRot);
-	mat4.rotateZ(transformationMatrix, transformationMatrix, zRot);
+    var mMatrixLocation = gl.getUniformLocation(gl.programObject, "mMatrix");
+	var vMatrixLocation = gl.getUniformLocation(gl.programObject, "vMatrix");
+	var pMatrixLocation = gl.getUniformLocation(gl.programObject, "pMatrix");
+    mMatrix = mat4.create(); 
+	vMatrix = mat4.create(); 
+	pMatrix = mat4.create(); 
+	mat4.frustum(pMatrix, -1, 1, -1, 1, 1, 5); 
+	mat4.lookAt(vMatrix, [0,cam_y,2], [0,0,0], [0,1,0]); 
+	cam_y += 0.01;
+	//console.log("-1,1", pMatrix);
+	mat4.rotateX(mMatrix, mMatrix, xRot);
+	mat4.rotateY(mMatrix, mMatrix, yRot);
+	mat4.rotateZ(mMatrix, mMatrix, zRot);
 	
-	if (flag_animation == 0)
+	if (flag_animation == 1)
 	{
 		//xRot = xRot + speedRot;	
 		yRot = yRot + speedRot;	
-		zRot = zRot + speedRot;	
+		// zRot = zRot + speedRot;	
     }
-	gl.uniformMatrix4fv(matrixLocation, gl.FALSE, transformationMatrix );
+	gl.uniformMatrix4fv(mMatrixLocation, gl.FALSE, mMatrix );
+	gl.uniformMatrix4fv(vMatrixLocation, gl.FALSE, vMatrix );
+	gl.uniformMatrix4fv(pMatrixLocation, gl.FALSE, pMatrix );
 
     if (!testGLError("gl.uniformMatrix4fv")) {
         return false;
@@ -215,6 +224,8 @@ function renderScene() {
     }
 
 	gl.drawArrays(draw_mode, 0, 36); 
+	var saveMat = mat4.create();
+
     if (!testGLError("gl.drawArrays")) {
         return false;
     }
