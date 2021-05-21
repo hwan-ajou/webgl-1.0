@@ -32,60 +32,76 @@ function initialiseGL(canvas) {
 }
 
 var shaderProgram;
+var num_vertex = 36; 
+var opacity1 = 1.0; 
+var opacity2 = 1.0; 
 
 var vertexData = [
 		// Backface (RED/WHITE) -> z = 0.5
-        -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0,
-         0.5,  0.5, -0.5,  1.0, 0.0, 0.0, 1.0,
-         0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0,
-        -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, 1.0,
-        -0.5,  0.5, -0.5,  1.0, 0.0, 0.0, 1.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 1.0, 1.0, 
+        -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, opacity1,
+         0.5,  0.5, -0.5,  1.0, 0.0, 0.0, opacity1,
+         0.5, -0.5, -0.5,  1.0, 0.0, 0.0, opacity1,
+        -0.5, -0.5, -0.5,  1.0, 0.0, 0.0, opacity2,
+        -0.5,  0.5, -0.5,  1.0, 0.0, 0.0, opacity2,
+         0.5,  0.5, -0.5,  1.0, 0.0, 0.0, opacity2, 
 		// Front (BLUE/WHITE) -> z = 0.5
-        -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0,
-         0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0,
-		 0.5,  0.5,  0.5,  0.0, 0.0, 1.0, 1.0,
-        -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, 1.0,
-         0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0, 
-		 -0.5,  0.5,  0.5,  0.0, 0.0, 1.0, 1.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, opacity1,
+         0.5, -0.5,  0.5,  0.0, 0.0, 1.0, opacity1,
+		 0.5,  0.5,  0.5,  0.0, 0.0, 1.0, opacity1,
+        -0.5, -0.5,  0.5,  0.0, 0.0, 1.0, opacity2,
+         0.5,  0.5,  0.5,  0.0, 0.0, 1.0, opacity2, 
+		-0.5,  0.5,  0.5,  0.0, 0.0, 1.0, opacity2,
 		// LEFT (GREEN/WHITE) -> z = 0.5
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, 1.0,
-        -0.5,  0.5,  0.5,  0.0, 1.0, 0.0, 1.0,
-        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0, 1.0,
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, 1.0,
-        -0.5, -0.5,  0.5,  0.0, 1.0, 0.0, 1.0,
-        -0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0, 
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, opacity2,
+        -0.5,  0.5,  0.5,  0.0, 1.0, 0.0, opacity2,
+        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0, opacity2,
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0, opacity1,
+        -0.5, -0.5,  0.5,  0.0, 1.0, 0.0, opacity1,
+        -0.5,  0.5,  0.5,  0.0, 1.0, 0.0, opacity1, 
 		// RIGHT (YELLOW/WHITE) -> z = 0.5
-         0.5, -0.5, -0.5,  1.0, 1.0, 0.0, 1.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 0.0, 1.0,
-		 0.5,  0.5,  0.5,  1.0, 1.0, 0.0, 1.0,
-         0.5, -0.5, -0.5,  1.0, 1.0, 0.0, 1.0,
-         0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0, 
-		 0.5, -0.5,  0.5,  1.0, 1.0, 0.0, 1.0,
+         0.5, -0.5, -0.5,  1.0, 1.0, 0.0, opacity1,
+         0.5,  0.5, -0.5,  1.0, 1.0, 0.0, opacity1,
+		 0.5,  0.5,  0.5,  1.0, 1.0, 0.0, opacity1,
+         0.5, -0.5, -0.5,  1.0, 1.0, 0.0, opacity2,
+         0.5,  0.5,  0.5,  1.0, 1.0, 0.0, opacity2, 
+		 0.5, -0.5,  0.5,  1.0, 1.0, 0.0, opacity2,
 		// BOTTON (MAGENTA/WHITE) -> z = 0.5
-        -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0,
-         0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0,
-		 0.5, -0.5,  0.5,  1.0, 0.0, 1.0, 1.0,
-        -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, 1.0,
-         0.5, -0.5,  0.5,  1.0, 1.0, 1.0, 1.0, 
-		 -0.5, -0.5,  0.5,  1.0, 0.0, 1.0, 1.0,
+        -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, opacity1,
+         0.5, -0.5, -0.5,  1.0, 0.0, 1.0, opacity1,
+		 0.5, -0.5,  0.5,  1.0, 0.0, 1.0, opacity1,
+        -0.5, -0.5, -0.5,  1.0, 0.0, 1.0, opacity2,
+         0.5, -0.5,  0.5,  1.0, 0.0, 1.0, opacity2, 
+		-0.5, -0.5,  0.5,  1.0, 0.0, 1.0, opacity2,
 		// TOP (CYAN/WHITE) -> z = 0.5
-        -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0,
-         0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0,
-         0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0,
-        -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, 1.0,
-        -0.5,  0.5,  0.5,  0.0, 1.0, 1.0, 1.0,
-         0.5,  0.5,  0.5,  1.0, 1.0, 1.0, 1.0 
+        -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, opacity2,
+         0.5,  0.5,  0.5,  0.0, 1.0, 1.0, opacity2,
+         0.5,  0.5, -0.5,  0.0, 1.0, 1.0, opacity2,
+        -0.5,  0.5, -0.5,  0.0, 1.0, 1.0, opacity1,
+        -0.5,  0.5,  0.5,  0.0, 1.0, 1.0, opacity1,
+         0.5,  0.5,  0.5,  0.0, 1.0, 1.0, opacity1 
 ];
 
 function initialiseBuffer() {
 
     gl.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
 
     return testGLError("initialiseBuffers");
 }
+
+function updateBuffer() {
+	for (var i=0; i< 6; i++)
+	{
+		vertexData[i*42+6] = vertexData[i*42+13] = vertexData[i*42+20] = opacity1; 
+		vertexData[i*42+27] = vertexData[i*42+34] = vertexData[i*42+41] = opacity2;
+	}			
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
+
+    return testGLError("updateBuffers");
+}
+
 
 function initialiseShaders() {
 
@@ -197,6 +213,13 @@ function fn_scissor()
 	document.getElementById('scissorw').value,document.getElementById('scissorh').value);
 }
 
+var twice_x=0.0, twice_y=0.0, twice_z=0.0; 
+function fn_twice_position()
+{
+	twice_x = document.getElementById('twice_x').value;
+	twice_y = document.getElementById('twice_y').value;
+	twice_z = document.getElementById('twice_z').value;
+}
 
 function fn_polygonOffset()
 {
@@ -210,6 +233,8 @@ function fn_depth_mode(val)
 
 var mMat, vMat, pMat; 
 var depth_clear_value = 1.0; 
+var sample_coverage_value = 1.0; 
+var flag_sample_coverage_inverse = 0;
 
 function fn_make_clear_stencil()
 {
@@ -228,13 +253,31 @@ function fn_make_clear_stencil()
 	gl.disable(gl.SCISSOR_TEST); 
 }
 
+var blend_const_color = [0,0,0,1.0]; 
+
+var blend_sc_func = 1;		// gl.ONE
+var blend_dc_func = 0;		// gl.ZERO
+var blend_color_op = 32774; // gl.FUNC_ADD; 
+var blend_sa_func = 1; 		// gl.ONE
+var blend_da_func = 0;		// gl.ZERO
+var blend_alpha_op = 32774; // gl.FUNC_ADD; 
+
+
 function renderScene() {
 	
 	// fn_make_clear_stencil();
 	
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
 	gl.clearDepth(depth_clear_value);											// Added for depth Test 
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);	// Added for depth Test 
+	if (gl.isEnabled(gl.SAMPLE_COVERAGE))
+		gl.sampleCoverage(sample_coverage_value, flag_sample_coverage_inverse);
+	
+	if (gl.isEnabled(gl.BLEND))
+	{
+		gl.blendFuncSeparate(blend_sc_func, blend_dc_func, blend_sa_func, blend_da_func); 
+		gl.blendEquationSeparate(blend_color_op, blend_alpha_op);
+	}
 	
     var mMatLocation = gl.getUniformLocation(gl.programObject, "mMat");
 	var vMatLocation = gl.getUniformLocation(gl.programObject, "vMat");
@@ -288,17 +331,20 @@ function renderScene() {
 		gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP); 
 		gl.colorMask(true, true, true, true); 
 	}
+	else
+	{
+		gl.disable(gl.STENCIL_TEST);
+	}
 	
-	
-	gl.drawArrays(draw_mode, 0, 36); 
+	gl.disable(gl.POLYGON_OFFSET_FILL); // Offset must be applied only one not both
+	gl.drawArrays(draw_mode, 0, num_vertex); 
 	
 	if ( flag_draw_twice ) {
-		gl.enable(gl.POLYGON_OFFSET_FILL);
-		mat4.translate(mMat, mMat, [0.000, 0.00, 0.0]);
-		mat4.rotateY(mMat, mMat, 3.141592/2.0);
+		mat4.translate(mMat, mMat, [twice_x, twice_y, twice_z]); 
+		// mat4.rotateY(mMat, mMat, 3.141592/2.0);	// 90 degree rotate to make different face color 
 		gl.uniformMatrix4fv(mMatLocation, gl.FALSE, mMat );
-		gl.drawArrays(draw_mode, 0, 36); 
-		gl.disable(gl.POLYGON_OFFSET_FILL);
+		gl.enable(gl.POLYGON_OFFSET_FILL); 
+		gl.drawArrays(draw_mode, 0, num_vertex); 
 	}
 	
     if (!testGLError("gl.drawArrays")) {
@@ -321,10 +367,6 @@ function main() {
     if (!initialiseShaders()) {
         return;
     }
-	
-	//fn_capture_stencil();
-	//renderScene();
-	//fn_make_clear_stencil();
 	
     requestAnimFrame = (function () {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
