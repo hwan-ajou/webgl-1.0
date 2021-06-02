@@ -1,0 +1,173 @@
+<html>
+
+<head>
+<title>WebGL1.0 Tutorial Lab 11 - Textures</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<script type="text/javascript" src="gl-matrix.js"> </script>
+<script type="text/javascript" src="T11_tex_in_html.js"> </script>
+
+</head>
+
+<body style="background-color:black;color:white;" onload="main()">
+  <table>
+  <td>
+    <canvas id="helloapicanvas" style="border: none;" width="800" height="600"></canvas>
+  <td>	
+	<br/>
+	<lable>Opacity 1 :</label>
+	<input style="width:200px" type="range" min="0" max="100" value="100" 
+	        oninput="opacity1 = this.value / 100.0;updateBuffer();"></input>
+    <lable>Opacity 2 :</label>
+	<input style="width:200px" type="range" min="0" max="100" value="100" 
+	        oninput="opacity2 = this.value / 100.0;updateBuffer();"></input>
+	<lable>number of vertex (0~36)</label>
+	<input style="width:200px" type="range" min="0" max="36" value="100" 
+	        oninput="num_vertex = this.value ;"></input>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_animation ^= 1;" id="toggleAnimation"><lable>Toggle Animation | </lebel>
+	<lable>Speed Up/Down :</label> 
+	<button onclick="fn_speed_scale(1.1)"> + </button>
+	<button onclick="fn_speed_scale(0.9)"> - </button>
+	<br/><hr>
+		<input type="checkbox" onclick="fn_toggle(gl.SAMPLE_COVERAGE)">
+	    <lable>SAMPLE_COVERAGE  | sampleCoverage(v, inverse) </lable>
+		<input style="width:300px" id="sampleCoverageValue" type="range" min="0" max="100" value="100" 
+	        oninput="sample_coverage_value = this.value / 100.0;"></input>
+		<input type="checkbox" onclick="flag_sample_coverage_inverse ^= 1;"><label> inverse </lable> <br/> 
+		<input type="checkbox" onclick="fn_toggle(gl.SAMPLE_ALPHA_TO_COVERAGE)">
+	         <lable>SAMPLE_ALPHA_TO_COVERAGE</lable>	 
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(gl.BLEND)"><lable>BLEND | blendColor </lable>
+	<lable> R </label><input type="text" size="4" value="0.0" onchange="blend_const_color[0] = Number(this.value)">
+	<lable> G </label><input type="text" size="4" value="0.0" onchange="blend_const_color[1] = Number(this.value)">
+	<label> B </label><input type="text" size="4" value="0.0" onchange="blend_const_color[2] = Number(this.value)">
+	<label> A </label><input type="text" size="4" value="1.0" onchange="blend_const_color[3] = Number(this.value)"> <br/>
+	<br/>
+	<table border="1" style="border-collapse:collapse" >
+	<tr><td> <label> src color factor : </label> <td> <label> color equation   </label> </td> <td> <label> dst color factor </label>  </td>
+	<td> 
+	<tr><td> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE;" checked><lable>ONE<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ZERO;"><lable>ZERO <br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.SRC_COLOR;"><lable>SRC_COLOR<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.SRC_ALPHA;"><lable>SRC_ALPHA<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE_MINUS_SRC_COLOR;"><lable>ONE_MINUS_SRC_COLOR<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE_MINUS_SRC_ALPHA;"><lable>ONE_MINUS_SRC_ALPHA<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.DST_COLOR;"><lable>DST_COLOR<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.DST_ALPHA;"><lable>DST_ALPHA<br/>
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE_MINUS_DST_COLOR;"><lable>ONE_MINUS_DST_COLOR<br/>
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE_MINUS_DST_ALPHA;"><lable>ONE_MINUS_DST_ALPHA<br/>
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.CONSTANT_COLOR;"><lable>CONSTANT_COLOR<br/>
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE_MINUS_CONSTANT_COLOR;"><lable>ONE_MINUS_CONSTANT_COLOR<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.SRC_ALPHA_SATURATE;"><lable>SRC_ALPHA_SATURATE<br/> 
+	<td>
+		<input name="color_op" type="radio" onclick="blend_color_op=gl.FUNC_ADD;" checked><lable>FUNC_ADD <br/> 
+		<input name="color_op" type="radio" onclick="blend_color_op=gl.FUNC_SUBTRACT;" ><lable>FUNC_SUBTRACT <br/> 
+		<input name="color_op" type="radio" onclick="blend_color_op=gl.FUNC_REVERSE_SUBTRACT;" ><lable>FUNC_REVERSE_SUBTRACT<br/> 
+	<td>
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE;" ><lable>ONE<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ZERO;" checked><lable>ZERO <br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.SRC_COLOR;"><lable>SRC_COLOR<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.SRC_ALPHA;"><lable>SRC_ALPHA<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_SRC_COLOR;"><lable>ONE_MINUS_SRC_COLOR<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_SRC_ALPHA;"><lable>ONE_MINUS_SRC_ALPHA<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.DST_COLOR;"><lable>DST_COLOR<br/> 
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.DST_ALPHA;"><lable>DST_ALPHA<br/>
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_DST_COLOR;"><lable>ONE_MINUS_DST_COLOR<br/>
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_DST_ALPHA;"><lable>ONE_MINUS_DST_ALPHA<br/>
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.CONSTANT_COLOR;"><lable>CONSTANT_COLOR<br/>
+		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_CONSTANT_COLOR;"><lable>ONE_MINUS_CONSTANT_COLOR<br/> 
+	<tr> 
+	<td> <label> src alpha factor : </label> <td> <label> alpha equation   </label> </td> <td> <label> dst alpha factor </label>  </td>
+	<tr>
+	<td> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE;" checked><lable>ONE<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ZERO;"><lable>ZERO <br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.SRC_COLOR;"><lable>SRC_COLOR<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.SRC_ALPHA;"><lable>SRC_ALPHA<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE_MINUS_SRC_COLOR;"><lable>ONE_MINUS_SRC_COLOR<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE_MINUS_SRC_ALPHA;"><lable>ONE_MINUS_SRC_ALPHA<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.DST_COLOR;"><lable>DST_COLOR<br/> 
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.DST_ALPHA;"><lable>DST_ALPHA<br/>
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE_MINUS_DST_COLOR;"><lable>ONE_MINUS_DST_COLOR<br/>
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE_MINUS_DST_ALPHA;"><lable>ONE_MINUS_DST_ALPHA<br/>
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.CONSTANT_COLOR;"><lable>CONSTANT_COLOR<br/>
+		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE_MINUS_CONSTANT_COLOR;"><lable>ONE_MINUS_CONSTANT_COLOR<br/> 
+		<input name="sc_func" type="radio" onclick="blend_sa_func=gl.SRC_ALPHA_SATURATE;"><lable>SRC_ALPHA_SATURATE<br/> 
+	<td>
+		<input name="alpha_op" type="radio" onclick="blend_alpha_op=gl.FUNC_ADD;" checked><lable>FUNC_ADD <br/> 
+		<input name="alpha_op" type="radio" onclick="blend_alpha_op=gl.FUNC_SUBTRACT;" ><lable>FUNC_SUBTRACT <br/> 
+		<input name="alpha_op" type="radio" onclick="blend_alpha_op=gl.FUNC_REVERSE_SUBTRACT;" ><lable>FUNC_REVERSE_SUBTRACT<br/> 
+	<td>
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE;" ><lable>ONE<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ZERO;" checked><lable>ZERO <br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.SRC_COLOR;"><lable>SRC_COLOR<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.SRC_ALPHA;"><lable>SRC_ALPHA<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE_MINUS_SRC_COLOR;"><lable>ONE_MINUS_SRC_COLOR<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE_MINUS_SRC_ALPHA;"><lable>ONE_MINUS_SRC_ALPHA<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.DST_COLOR;"><lable>DST_COLOR<br/> 
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.DST_ALPHA;"><lable>DST_ALPHA<br/>
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE_MINUS_DST_COLOR;"><lable>ONE_MINUS_DST_COLOR<br/>
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE_MINUS_DST_ALPHA;"><lable>ONE_MINUS_DST_ALPHA<br/>
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.CONSTANT_COLOR;"><lable>CONSTANT_COLOR<br/>
+		<input name="da_func" type="radio" onclick="blend_da_func=gl.ONE_MINUS_CONSTANT_COLOR;"><lable>ONE_MINUS_CONSTANT_COLOR<br/> 
+	</table>
+	<br/><hr>
+	<lable>Draw Mode :</label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(0)"><lable>POINTS </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(1)"><lable>LINES </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(2)"><lable>LINE_STRIP </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(3)"><lable>LINE_LOOP  </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(4)" checked><lable>TRIANGLES </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(5)"><lable>TRIANGLE_STRIP </label>
+	<input name="drawmode" type="radio" onclick="fn_draw_mode(6)"><lable>TRIANGLE_FAN </label>
+    <br/><hr>
+    <label>FOV : </label>
+    <input style="width:400px" id="fov_range" type="range" min="10" max="170" value="90" oninput="fn_update_fov(this.value);"></input>
+	<input style="width:60px" type="text" id="textFOV" value="90">
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(2884)"><lable>CULL_FACE  | </lable>
+	<label>cullFace(mode) :</label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1028)"><lable>FRONT <label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1029)" checked><label>BACK <label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1032)"><label>FRONT_AND_BACK <label>
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(3089)"><lable>SCISSOR_TEST  | </lable>
+	<label>scissor(x,y,w,h) :</label>
+	<lable> X <label><input id="scissorx" type="text" size="4" value="0">
+	<label> Y <label><input id="scissory" type="text" size="4" value="0">
+	<label> W <label><input id="scissorw" type="text" size="4" value="800">
+	<label> H <label><input id="scissorh" type="text" size="4" value="600">
+	<button onclick="fn_scissor()">Set</button>
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(2929)"><lable>DEPTH_TEST  | depth clear value : </lable> 
+	<input style="width:300px" id="depth_clear" type="range" min="0" max="100" value="100" 
+	     oninput="depth_clear_value = this.value / 100.0;"></input>
+	<br/>
+	<label>depthFunc(mode) :</label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(512)"><lable>NEVER </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(513)" checked><lable>LESS </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(514)"><lable>EQAUL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(515)"><lable>LEQUAL  </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(516)"><lable>GREATER </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(517)"><lable>NOTEQUAL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(518)"><lable>GEQUAL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(519)"><lable>ALWAYS </label> <br/>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_draw_twice ^= 1;"><lable>Draw One more box | Position : </lable> 
+	<lable> X </label><input id="twice_x" type="text" size="4" value="0.2">
+	<lable> Y </label><input id="twice_y" type="text" size="4" value="0.2">
+	<label> Z </label><input id="twice_z" type="text" size="4" value="0.2">
+	<button onclick="fn_twice_position()">Set</button>
+	<br/>
+	polygonOffset (factor, units) : </lable> 
+	<lable> F </label><input id="offset_f" type="text" size="4" value="0">
+	<label> U </label><input id="offset_u" type="text" size="4" value="0">
+	<button onclick="fn_polygonOffset()">Set</button>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_draw_stencil ^= 1;"><lable>Stencil Test with Back-face</lable> 
+	<br/><hr>
+  </table>	
+  <img id="hylee_128" src="hylee_128.png"> 
+</body>
+</html>
