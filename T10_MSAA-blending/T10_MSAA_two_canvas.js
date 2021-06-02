@@ -42,7 +42,10 @@ function initialiseBuffer() {
     var vertexData = [
         -0.4, -0.4, 0.0, // Bottom left
          0.4, -0.4, 0.0, // Bottom right
-         0.0, 1.4, 0.0  // Top middle
+         0.0, 1.4, 0.0,  // Top middle
+		 0.4, -0.4, 0.0, // Bottom right
+         0.0, 1.4, 0.0,  // Top middle
+		 0.6, 1.4,0.0
     ];
     // Generate a buffer object
     gl.vertexBuffer = gl.createBuffer();
@@ -146,7 +149,7 @@ function renderScene() {
         return false;
     }
 
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     if (!testGLError("gl.drawArrays")) {
         return false;
@@ -184,7 +187,7 @@ function renderScene() {
         return false;
     }
 
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     if (!testGLError("gl.drawArrays")) {
         return false;

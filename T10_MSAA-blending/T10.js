@@ -176,6 +176,7 @@ var flag_draw_twice = 0;
 var flag_draw_stencil = 0; 
 
 function fn_speed_scale(a)
+
 {
 	speedRot *= a; 
 }
@@ -213,7 +214,7 @@ function fn_scissor()
 	document.getElementById('scissorw').value,document.getElementById('scissorh').value);
 }
 
-var twice_x=0.0, twice_y=0.0, twice_z=0.0; 
+var twice_x=0.2, twice_y=0.2, twice_z=0.2; 
 function fn_twice_position()
 {
 	twice_x = document.getElementById('twice_x').value;
@@ -267,7 +268,7 @@ function renderScene() {
 	
 	// fn_make_clear_stencil();
 	
-    gl.clearColor(0.0, 0.0, 0.0, 0.0);
+    gl.clearColor(0.5, 0.5, 0.5, 0.0);
 	gl.clearDepth(depth_clear_value);											// Added for depth Test 
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);	// Added for depth Test 
 	if (gl.isEnabled(gl.SAMPLE_COVERAGE))
@@ -337,9 +338,11 @@ function renderScene() {
 	}
 	
 	gl.disable(gl.POLYGON_OFFSET_FILL); // Offset must be applied only one not both
+	//gl.disable(gl.BLEND);
 	gl.drawArrays(draw_mode, 0, num_vertex); 
 	
 	if ( flag_draw_twice ) {
+		//gl.enable(gl.BLEND);
 		mat4.translate(mMat, mMat, [twice_x, twice_y, twice_z]); 
 		// mat4.rotateY(mMat, mMat, 3.141592/2.0);	// 90 degree rotate to make different face color 
 		gl.uniformMatrix4fv(mMatLocation, gl.FALSE, mMat );

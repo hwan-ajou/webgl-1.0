@@ -9,7 +9,10 @@
 </head>
 
 <body style="background-color:black;color:white;" onload="main()">
+  <table>
+  <td>
     <canvas id="helloapicanvas" style="border: none;" width="800" height="600"></canvas>
+  <td>	
 	<br/>
 	<lable>Opacity 1 :</label>
 	<input style="width:200px" type="range" min="0" max="100" value="100" 
@@ -42,7 +45,7 @@
 	<br/>
 	<table border="1" style="border-collapse:collapse" >
 	<tr><td> <label> src color factor : </label> <td> <label> color equation   </label> </td> <td> <label> dst color factor </label>  </td>
-	<td> . <td> <label> src alpha factor : </label> <td> <label> alpha equation   </label> </td> <td> <label> dst alpha factor </label>  </td>
+	<td> 
 	<tr><td> 
 		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ONE;" checked><lable>ONE<br/> 
 		<input name="sc_func" type="radio" onclick="blend_sc_func=gl.ZERO;"><lable>ZERO <br/> 
@@ -74,7 +77,9 @@
 		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_DST_ALPHA;"><lable>ONE_MINUS_DST_ALPHA<br/>
 		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.CONSTANT_COLOR;"><lable>CONSTANT_COLOR<br/>
 		<input name="dc_func" type="radio" onclick="blend_dc_func=gl.ONE_MINUS_CONSTANT_COLOR;"><lable>ONE_MINUS_CONSTANT_COLOR<br/> 
-	<td> . 
+	<tr> 
+	<td> <label> src alpha factor : </label> <td> <label> alpha equation   </label> </td> <td> <label> dst alpha factor </label>  </td>
+	<tr>
 	<td> 
 		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ONE;" checked><lable>ONE<br/> 
 		<input name="sa_func" type="radio" onclick="blend_sa_func=gl.ZERO;"><lable>ZERO <br/> 
@@ -162,5 +167,6 @@
 	<br/><hr>
 	<input type="checkbox" onclick="flag_draw_stencil ^= 1;"><lable>Stencil Test with Back-face</lable> 
 	<br/><hr>
+  </table>	
 </body>
 </html>
