@@ -1,0 +1,92 @@
+<html>
+
+<head>
+<title>WebGL1.0 Tutorial Lab 12 - Shading</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<script type="text/javascript" src="gl-matrix.js"> </script>
+<script type="text/javascript" src="T12_cylinder_flat.js"> </script>
+
+</head>
+
+<body style="background-color:black;color:white;" onload="main()">
+  <table>
+  <tr>
+  <td>
+    <canvas id="helloapicanvas" style="border: none;" width="800" height="600"></canvas>
+  <tr>
+  <td>	
+	<br/><hr>
+		<lable>Light Position X,Y,Z (-4 ~ +4)</label>
+		<input style="width:200px" type="range" min="-100" max="100" value="0" 
+	        oninput="light_posx = this.value/25 ;"></input>
+		<input style="width:200px" type="range" min="-100" max="100" value="0" 
+	        oninput="light_posy = this.value/25 ;"></input>
+		<input style="width:200px" type="range" min="-100" max="100" value="50" 
+	        oninput="light_posz = this.value/25 ;"></input>
+	<br/><hr>
+	<lable>number of vertex (0~36)</label>
+	<input style="width:200px" type="range" min="0" max="200" value="100"
+	        oninput="num_vertex = this.value ;"></input>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_animation ^= 1;" id="toggleAnimation"><lable>Toggle Animation | </lebel>
+	<lable>Speed Up/Down :</label> 
+	<button onclick="fn_speed_scale(1.1)"> + </button>
+	<button onclick="fn_speed_scale(0.9)"> - </button>
+	<br/><hr>
+	<lable>Draw Mode :</label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 0;"><lable>POINTS </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 1;"><lable>LINES </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 2;"><lable>LINE_STRIP </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 3;"><lable>LINE_LOOP  </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 4;"><lable>TRIANGLES </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 5;" checked><lable>TRIANGLE_STRIP </label>
+	<input name="drawmode" type="radio" onclick="draw_mode = 6"><lable>TRIANGLE_FAN </label>
+    <br/><hr>
+    <label>FOV : </label>
+    <input style="width:400px" id="fov_range" type="range" min="10" max="170" value="90" oninput="fn_update_fov(this.value);"></input>
+	<input style="width:60px" type="text" id="textFOV" value="90">
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(2884)"><lable>CULL_FACE  | </lable>
+	<label>cullFace(mode) :</label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1028)"><lable>FRONT <label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1029)" checked><label>BACK <label>
+	<input name="cullmode" type="radio" onclick="fn_cull_mode(1032)"><label>FRONT_AND_BACK <label>
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(3089)"><lable>SCISSOR_TEST  | </lable>
+	<label>scissor(x,y,w,h) :</label>
+	<lable> X <label><input id="scissorx" type="text" size="4" value="0">
+	<label> Y <label><input id="scissory" type="text" size="4" value="0">
+	<label> W <label><input id="scissorw" type="text" size="4" value="800">
+	<label> H <label><input id="scissorh" type="text" size="4" value="600">
+	<button onclick="fn_scissor()">Set</button>
+	<br/><hr>
+	<input type="checkbox" onclick="fn_toggle(2929)"><lable>DEPTH_TEST  | depth clear value : </lable> 
+	<input style="width:300px" id="depth_clear" type="range" min="0" max="100" value="100" 
+	     oninput="depth_clear_value = this.value / 100.0;"></input>
+	<br/>
+	<label>depthFunc(mode) :</label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(512)"><lable>NEVER </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(513)" checked><lable>LESS </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(514)"><lable>EQAUL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(515)"><lable>LEQUAL  </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(516)"><lable>GREATER </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(517)"><lable>NOTEQUAL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(518)"><lable>GEQUAL </label>
+	<input name="depthmode" type="radio" onclick="fn_depth_mode(519)"><lable>ALWAYS </label> <br/>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_draw_twice ^= 1;"><lable>Draw One more box | Position : </lable> 
+	<lable> X </label><input id="twice_x" type="text" size="4" value="0.2">
+	<lable> Y </label><input id="twice_y" type="text" size="4" value="0.2">
+	<label> Z </label><input id="twice_z" type="text" size="4" value="0.2">
+	<button onclick="fn_twice_position()">Set</button>
+	<br/>
+	polygonOffset (factor, units) : </lable> 
+	<lable> F </label><input id="offset_f" type="text" size="4" value="0">
+	<label> U </label><input id="offset_u" type="text" size="4" value="0">
+	<button onclick="fn_polygonOffset()">Set</button>
+	<br/><hr>
+	<input type="checkbox" onclick="flag_draw_stencil ^= 1;"><lable>Stencil Test with Back-face</lable> 
+	<br/><hr>
+  </table>	
+</body>
+</html>
