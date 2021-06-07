@@ -94,11 +94,6 @@ function initialiseBuffer() {
 	// Fill the texture with a 1x1 red pixel.
 	const texData = new Uint8Array([255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255]);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, texData); 
-	// texParam must be in both!
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 	
 	tex2 = gl.createTexture(); 
 	var image = new Image();
@@ -107,21 +102,21 @@ function initialiseBuffer() {
 		// Now that the image has loaded make copy it to the texture.
 		gl.bindTexture(gl.TEXTURE_2D, tex2);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-		// It must be inside of EventListener
 		gl.generateMipmap(gl.TEXTURE_2D);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
 		});
+	
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     return testGLError("initialiseBuffers");
 }
 
 function updateBuffer() {
 	for (var i=0; i< 6; i++)
 	{
-		vertexData[i*54+6] = vertexData[i*54+15] = vertexData[i*54+24] = opacity1; 
-		vertexData[i*54+33] = vertexData[i*54+42] = vertexData[i*54+51] = opacity2;
+		vertexData[i*54+6] = vertexData[i*54+13] = vertexData[i*54+20] = opacity1; 
+		vertexData[i*54+27] = vertexData[i*54+34] = vertexData[i*54+41] = opacity2;
 	}			
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
