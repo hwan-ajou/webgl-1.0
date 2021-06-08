@@ -51,9 +51,9 @@ function makeCylinder(r,h,n)
 		viewVertex[i*48 + 13] =  h/2.0; 
 		viewVertex[i*48 +  2] = viewVertex[i*48 + 14] = Math.sin(Math.PI / 180.0 * (360.0 / n ) * i); 
 		// Color Attrub all light grey; 
-		viewVertex[i*48 +  3] = viewVertex[i*48 + 15] = 0.75; 
-		viewVertex[i*48 +  4] = viewVertex[i*48 + 16] = 0.75; 
-		viewVertex[i*48 +  5] = viewVertex[i*48 + 17] = 0.75; 
+		viewVertex[i*48 +  3] = viewVertex[i*48 + 15] = 0.95; 
+		viewVertex[i*48 +  4] = viewVertex[i*48 + 16] = 0.95; 
+		viewVertex[i*48 +  5] = viewVertex[i*48 + 17] = 0.95; 
 		viewVertex[i*48 +  6] = opacity1;
 		viewVertex[i*48 + 18] = opacity2;
 		// Texture UV
@@ -71,9 +71,9 @@ function makeCylinder(r,h,n)
 		viewVertex[i*48+24 + 13] =  h/2.0; 
 		viewVertex[i*48+24 +  2] = viewVertex[i*48+24 + 14] = Math.sin(Math.PI / 180.0 * (360.0 / n ) * (i+1)); 
 		// Color Attrub all light grey; 
-		viewVertex[i*48+24 +  3] = viewVertex[i*48+24 + 15] = 0.75; 
-		viewVertex[i*48+24 +  4] = viewVertex[i*48+24 + 16] = 0.75; 
-		viewVertex[i*48+24 +  5] = viewVertex[i*48+24 + 17] = 0.75; 
+		viewVertex[i*48+24 +  3] = viewVertex[i*48+24 + 15] = 0.95; 
+		viewVertex[i*48+24 +  4] = viewVertex[i*48+24 + 16] = 0.95; 
+		viewVertex[i*48+24 +  5] = viewVertex[i*48+24 + 17] = 0.95; 
 		viewVertex[i*48+24 +  6] = opacity1;
 		viewVertex[i*48+24 + 18] = opacity2;
 		// Texture UV
@@ -293,7 +293,7 @@ var blend_da_func = 0;		// gl.ZERO
 var blend_alpha_op = 32774; // gl.FUNC_ADD; 
 var light_posx = 0.0;
 var light_posy = 0.0;
-var light_posz = 2.0;
+var light_posz = 0.0;
 
 function renderScene() {
 	

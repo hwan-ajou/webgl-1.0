@@ -90,7 +90,7 @@ function initialiseBuffer() {
 
     gl.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-	makeCube(0.5,0.5,0.5);
+	// makeCube(0.5,0.5,0.5);
     gl.bufferData(gl.ARRAY_BUFFER, makeCube(0.5,0.5,0.5) , gl.DYNAMIC_DRAW);
 
     return testGLError("initialiseBuffers");
@@ -131,10 +131,11 @@ function initialiseShaders() {
 			{ 
 				highp vec3 VMv = vec3 (vMat * mMat * myVertex);
 				highp vec3 VMn = vec3 (vMat * mMat * vec4(myNormal, 0.0));
+				/* highp vec3 VMl = vec3 (vMat * mMat * vec4(lighPos, 1.0)); */
 				float d = length(lightPos - VMv);
 				vec3 lightVec = normalize(lightPos - VMv);
-				float diffuse = max(dot(VMn, lightVec), 0.1);
-				diffuse = diffuse * (1.0 / (1.0 + (0.25 * d * d)));
+				float diffuse = max(dot(VMn, lightVec), 0.0);
+				diffuse = diffuse * (1.0 / (1.0 + (0.025 * d * d)));
 				gl_Position = pMat * vMat * mMat * myVertex;
 				gl_PointSize = 8.0;
 				col = myColor * diffuse;
@@ -270,7 +271,7 @@ var blend_da_func = 0;		// gl.ZERO
 var blend_alpha_op = 32774; // gl.FUNC_ADD; 
 var light_posx = 0.0;
 var light_posy = 0.0;
-var light_posz = 2.0;
+var light_posz = 0.0;
 
 function renderScene() {
 	

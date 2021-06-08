@@ -90,7 +90,7 @@ function initialiseBuffer() {
 
     gl.vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-	makeCube(0.5,0.5,0.5);
+    //	makeCube(0.5,0.5,0.5);
     gl.bufferData(gl.ARRAY_BUFFER, makeCube(0.5,0.5,0.5) , gl.DYNAMIC_DRAW);
 
     return testGLError("initialiseBuffers");
@@ -99,15 +99,6 @@ function initialiseBuffer() {
 
 function initialiseShaders() {
 
-/* Gouraud Shading 
-    var fragmentShaderSource = `
-			varying highp vec4 col; 
-			void main(void) 
-			{ 
-				gl_FragColor = col;
-			}`;
-*/ 
-	// Phong Shading
     var fragmentShaderSource = `
 			precision mediump float;
 			uniform mediump vec3 lightPos; 
@@ -133,7 +124,6 @@ function initialiseShaders() {
         return false;
     }
 
-// Phong Shading
 	var vertexShaderSource = `
 		attribute highp vec4 myVertex; 
 		attribute highp vec4 myColor; 
@@ -153,32 +143,6 @@ function initialiseShaders() {
 			gl_Position = pMat * vMat * mMat * myVertex;
 		}`;
 
-/* Gouraud Shading 
-    var vertexShaderSource = `
-			attribute highp vec4 myVertex; 
-			attribute highp vec4 myColor; 
-			attribute highp vec2 myUV; 
-			attribute highp vec3 myNormal; 
-			uniform mediump vec3 lightPos; 
-			uniform mediump mat4 mMat; 
-			uniform mediump mat4 vMat; 
-			uniform mediump mat4 pMat; 
-			
-			varying highp vec4 col;
-			void main(void)  
-			{ 
-				highp vec3 VMv = vec3 (vMat * mMat * myVertex);
-				highp vec3 VMn = vec3 (vMat * mMat * vec4(myNormal, 0.0));
-				float d = length(lightPos - VMv);
-				vec3 lightVec = normalize(lightPos - VMv);
-				float diffuse = max(dot(VMn, lightVec), 0.1);
-				diffuse = diffuse * (1.0 / (1.0 + (0.25 * d * d)));
-				gl_Position = pMat * vMat * mMat * myVertex;
-				gl_PointSize = 8.0;
-				col = myColor * diffuse;
-			}`;
-*/ 
-	
     gl.vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(gl.vertexShader, vertexShaderSource);
     gl.compileShader(gl.vertexShader);
@@ -309,7 +273,7 @@ var blend_da_func = 0;		// gl.ZERO
 var blend_alpha_op = 32774; // gl.FUNC_ADD; 
 var light_posx = 0.0;
 var light_posy = 0.0;
-var light_posz = 2.0;
+var light_posz = 0.0;
 
 function renderScene() {
 	

@@ -120,7 +120,7 @@ function initialiseShaders() {
 			attribute highp vec4 myVertex; 
 			attribute highp vec4 myColor; 
 			attribute highp vec2 myUV; 
-			attribute highp vec2 myNormal; 
+			attribute highp vec3 myNormal; 
 			uniform mediump mat4 mMat; 
 			uniform mediump mat4 vMat; 
 			uniform mediump mat4 pMat; 

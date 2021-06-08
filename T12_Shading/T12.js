@@ -318,7 +318,7 @@ var blend_da_func = 0;		// gl.ZERO
 var blend_alpha_op = 32774; // gl.FUNC_ADD; 
 var light_posx = 0.0;
 var light_posy = 0.0;
-var light_posz = 2.0;
+var light_posz = 0.0;
 
 function renderScene() {
 	
