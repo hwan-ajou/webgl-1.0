@@ -1,14 +1,11 @@
 var gl;
 
 function testGLError(functionLastCalled) {
-
     var lastError = gl.getError();
-
     if (lastError != gl.NO_ERROR) {
         alert(functionLastCalled + " failed (" + lastError + ")");
         return false;
     }
-
     return true;
 }
 
@@ -30,8 +27,6 @@ function initialiseGL(canvas) {
     return true;
 }
 
-var shaderProgram;
-
 function initialiseBuffer() {
 
     var vertexData = [
@@ -47,6 +42,8 @@ function initialiseBuffer() {
     return testGLError("initialiseBuffers");
 	
 }
+
+var shaderProgram;
 
 function initialiseShaders() {
 
