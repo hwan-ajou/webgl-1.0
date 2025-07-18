@@ -13,5 +13,5 @@
 <body onload="main()">
     <canvas id="helloapicanvas" style="border: none;" width="800" height="600"></canvas>
 </body>
-<p> Hello Triangle </p>
+<p> Hwanyong Lee 이 환용</p>
 </html>
